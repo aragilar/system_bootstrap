@@ -1,0 +1,28 @@
+
+CURRENT_DIR=$(shell pwd)
+NEW_USER=aragilar
+DEB_REQS=lxc-selections
+DEBCONF_FILE=lxc-debconf
+DEBS_RECONF_FILE=lxc-reconf-debs
+USER_MAKEFILE=Makefile.user
+APT_GET=DEBIAN_FRONTEND=noninteractive apt-get -y
+
+
+.PHONY: setup setup-user install-debs set-config
+
+setup: setup-user install-debs
+
+set-config: $(DEBCONF_FILE)
+	debconf-set-selections $(DEBCONF_FILE)
+	dpkg-reconfigure --frontend=noninteractive $(shell cat $(DEBS_RECONF_FILE) | tr '\n' ' ')
+
+install-debs: $(DEB_REQS) set-config
+	$(APT_GET) install dselect
+	dselect update
+	dpkg --set-selections < $(DEB_REQS)
+	$(APT_GET) dselect-upgrade
+
+
+setup-user: install-debs
+	id $(NEW_USER) || adduser --disabled-password $(NEW_USER)
+	#su --login $(NEW_USER) make -f $(CURRENT_DIR)/$(USER_MAKEFILE)

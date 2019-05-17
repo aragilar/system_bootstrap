@@ -1,0 +1,26 @@
+#!/bin/sh
+
+set -xe
+
+URL=https://github.com/aragilar/system_bootstrap
+REPO=system_bootstrap
+LXC_MAKEFILE=Makefile.lxc
+INSTALL='apt install -y'
+PROXY_FILE=/etc/apt/apt.conf.d/29proxy
+
+printf "proxy is: %s\n" "$APT_PROXY"
+printf 'Acquire::http::Proxy "%s";' "$APT_PROXY" > $PROXY_FILE
+
+while ! systemctl is-active network-online.target; do
+    sleep 1
+    systemctl start network-online.target || printf "Waiting on network"
+done
+
+# get this repo
+$INSTALL git make
+if [ ! -e "$REPO" ]; then
+    git clone "$URL" "$REPO"
+fi
+
+# do actual install/setup
+make -C "$REPO" -f "$LXC_MAKEFILE" setup
