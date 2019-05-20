@@ -1,0 +1,24 @@
+
+LXC_NAME=debian
+USER_SSH_DIR=/home/$(NEW_USER)/.ssh
+APT_PROXY=$(shell /usr/share/squid-deb-proxy-client/apt-avahi-discover)
+
+.PHONY: setup-ssh setup-lxc remove-lxc enter-container
+
+setup-ssh:
+	install -D $(SSH_AUTH_FILE)
+
+setup-lxc:
+	lxc-create -t download -n $(LXC_NAME) -- -d debian -r sid -a amd64
+	lxc-start -n $(LXC_NAME)
+	lxc-wait -n $(LXC_NAME) -s RUNNING
+	cat inside_lxc | lxc-attach -n $(LXC_NAME) --set-var "APT_PROXY=$(APT_PROXY)" -- bash --login
+	lxc-stop -n $(LXC_NAME)
+
+remove-lxc:
+	-lxc-stop -n $(LXC_NAME)
+	lxc-destroy -n $(LXC_NAME)
+
+enter-container:
+	-lxc-start -n $(LXC_NAME)
+	lxc-attach -n $(LXC_NAME) -- su --login aragilar
