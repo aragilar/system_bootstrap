@@ -1,12 +1,23 @@
 
 LXC_NAME=debian
-USER_SSH_DIR=/home/$(NEW_USER)/.ssh
-APT_PROXY=$(shell /usr/share/squid-deb-proxy-client/apt-avahi-discover)
 
-.PHONY: setup-ssh setup-lxc remove-lxc enter-container
+USER_SSH_DIR=/home/$(USER)/.ssh
+SSH_AUTH_FILE=$(USER_SSH_DIR)/authorized_keys
+SSH_IDS=gh:aragilar
 
-setup-ssh:
-	install -D $(SSH_AUTH_FILE)
+APT_PROXY_FINDER=/usr/share/squid-deb-proxy-client/apt-avahi-discover
+APT_PROXY=$(if $(shell which $(APT_PROXY_FINDER)),$(shell $(APT_PROXY_FINDER)))
+APT_INSTALL=sudo apt install -y
+
+.PHONY: setup setup-ssh setup-lxc remove-lxc enter-container
+
+setup: setup-lxc setup-ssh
+
+$(SSH_AUTH_FILE):
+	-$(APT_INSTALL) ssh-import-id
+	ssh-import-id $(SSH_IDS)
+
+setup-ssh: $(SSH_AUTH_FILE)
 
 setup-lxc:
 	lxc-create -t download -n $(LXC_NAME) -- -d debian -r sid -a amd64
