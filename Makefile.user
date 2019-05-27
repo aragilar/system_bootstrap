@@ -1,0 +1,21 @@
+
+DUMP_SSH_KEY=cat ~/.ssh/id_rsa.pub
+MAKE_SSH_KEY=ssh-keygen
+
+.PHONY: setup-git setup-ssh-key setup-disc-solver setup-ppd-solutions
+
+setup-git:
+	git config --global user.name 'James Tocknell'
+	git config --global user.email 'james.tocknell@students.mq.edu.au'
+
+setup-ssh-key:
+	$(DUMP_SSH_KEY) || $(MAKE_SSH_KEY) && $(DUMP_SSH_KEY)
+
+setup-disc-solver:
+	git clone https://github.com/aragilar/DiscSolver ~/DiscSolver
+	mkvirtualenv -p `which python3` DiscSolverV1 && pip install -U ~/DiscSolver
+
+setup-ppd-solutions: setup-git
+	git clone ssh://git@ssh.github.com:443/aragilar/PPDSolutions ~/PPDSolutions
+	cd ~/PPDSolutions && git annex sync
+	echo 'Use git annex enableremote cloudstor to get cloudstor'
