@@ -8,17 +8,7 @@ MAKEFILE=Makefile.server
 INSTALL='sudo apt install -y'
 
 
-# Check for git
-if [ -z `which git` ]; then
-    echo "Git not installed, trying sudo apt install"
-    $INSTALL git
-fi
-
-# Check for make
-if [ -z `which make` ]; then
-    echo "make not installed, trying sudo apt install"
-    $INSTALL make
-fi
+$INSTALL git make lxc
 
 # get this repo
 if [ ! -e "$REPO" ]; then
