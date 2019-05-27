@@ -5,6 +5,10 @@ USER_SSH_DIR=/home/$(USER)/.ssh
 SSH_AUTH_FILE=$(USER_SSH_DIR)/authorized_keys
 SSH_IDS=gh:aragilar
 
+# This uses port 80 to avoid problems
+LXC_KEYSERVER=--keyserver 'hkp://p80.pool.sks-keyservers.net:80'
+LXC_OS=-d debian -r sid -a amd64
+
 APT_PROXY_FINDER=/usr/share/squid-deb-proxy-client/apt-avahi-discover
 APT_PROXY=$(if $(shell which $(APT_PROXY_FINDER)),$(shell $(APT_PROXY_FINDER)))
 APT_INSTALL=sudo apt install -y
@@ -28,7 +32,7 @@ lxc-system-prep:
 	echo "$(USER) veth lxcbr0 2" | sudo tee -a /etc/lxc/lxc-usernet
 
 setup-lxc:
-	lxc-create -t download -n $(LXC_NAME) -- -d debian -r sid -a amd64
+	lxc-create -t download -n $(LXC_NAME) -- $(LXC_OS) $(LXC_KEYSERVER)
 	lxc-start -n $(LXC_NAME)
 	lxc-wait -n $(LXC_NAME) -s RUNNING
 	cat inside_lxc | lxc-attach -n $(LXC_NAME) --set-var "APT_PROXY=$(APT_PROXY)" -- bash --login
