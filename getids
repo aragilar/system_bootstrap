@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+from getpass import getuser
+
+UID_FLAG = '--add-subuids'
+GID_FLAG = '--add-subgids'
+UID_FILE = '/etc/subuid'
+GID_FILE = '/etc/subgid'
+DEFAULT_USER_SIZE = 65536
+
+def get_ids(filename):
+    # users can have multiple ranges... this doesn't handle that yet
+    ids = {}
+    with open(filename) as f:
+        for line in f:
+            user, start, size = line.strip().split(':')
+            ids[user] = (int(start), int(size))
+    return ids
+
+
+def add_id(username, start, size, for_uid):
+    flag = UID_FLAG if for_uid else GID_FLAG
+    end = start + size - 1
+    check_call(['sudo', 'usermod', flag, '{}-{}'.format(start, end), username])
+
+def ensure_ids(username, for_uid):
+    filename = UID_FILE if for_uid else GID_FILE
+    ids = get_ids(filename)
+    if username in ids:
+        return ids[username]
+
+    max_start, max_size = max(ids, key=lambda x: x[0])  # assume no overlap
+    user_start = max_start + max_size
+    user_size = DEFAULT_USER_SIZE
+    try:
+        add_id(username, user_start, user_size, for_uid)
+        return user_start, user_size
+    except:
+        print("ERROR!")
+
+
+
+def print_lxc_info(username):
+    uid_start, uid_size = ensure_ids(username, for_uid=True)
+    gid_start, gid_size = ensure_ids(username, for_uid=False)
+    print("lxc.idmap = u 0 {} {}".format(uid_start, uid_size))
+    print("lxc.idmap = g 0 {} {}".format(gid_start, gid_size))
+
+
+def main():
+    print_lxc_info(getuser())
+
+if __name__ == '__main__':
+    main()

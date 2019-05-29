@@ -25,8 +25,7 @@ setup-ssh: $(SSH_AUTH_FILE)
 
 lxc-system-prep:
 	mkdir -p ~/.config/lxc
-	echo "lxc.idmap = u 0 100000 65536" > ~/.config/lxc/default.conf
-	echo "lxc.idmap = g 0 100000 65536" >> ~/.config/lxc/default.conf
+	python getids > ~/.config/lxc/default.conf
 	echo "lxc.net.0.type = veth" >> ~/.config/lxc/default.conf
 	echo "lxc.net.0.link = lxcbr0" >> ~/.config/lxc/default.conf
 	echo "$(USER) veth lxcbr0 2" | sudo tee -a /etc/lxc/lxc-usernet
