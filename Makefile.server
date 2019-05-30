@@ -43,4 +43,4 @@ remove-lxc:
 
 enter-container:
 	-lxc-start -n $(LXC_NAME)
-	lxc-attach -n $(LXC_NAME) -- su --login aragilar
+	lxc-attach -n $(LXC_NAME) -- su --login aragilar -c 'tmux attach || tmux'
