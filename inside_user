@@ -3,7 +3,7 @@ set -xe
 
 URL=https://github.com/aragilar/system_bootstrap
 REPO=~/system_bootstrap
-USER_MAKEFILE=Makefile.lxc
+USER_MAKEFILE=Makefile.user
 
 if [ ! -e "$REPO" ]; then
     git clone "$URL" "$REPO"
