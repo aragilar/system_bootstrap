@@ -20,6 +20,11 @@ done
 $INSTALL git make
 if [ ! -e "$REPO" ]; then
     git clone "$URL" "$REPO"
+else
+    pushd "$REPO"
+    git fetch --all
+    git merge --ff-only
+    popd
 fi
 
 # do actual install/setup
