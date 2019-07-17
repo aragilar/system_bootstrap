@@ -20,6 +20,7 @@ setup-ppd-solutions: setup-git
 	cd ~/PPDSolutions && git annex sync
 	echo 'Use git annex enableremote cloudstor to get cloudstor'
 
-initial-setup: setup-ssh-key
+initial-setup:
+	echo 'No initial setup - run setup once ssh is set up'
 
 setup: setup-disc-solver setup-ppd-solutions
