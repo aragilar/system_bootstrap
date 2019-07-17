@@ -29,7 +29,7 @@ install-debs: $(DEB_REQS) set-config
 setup-user: install-debs
 	id $(NEW_USER) || adduser --disabled-password $(NEW_USER)
 	#su --login $(NEW_USER) make -f $(CURRENT_DIR)/$(USER_MAKEFILE)
-	cat inside_user | sudo -u $(NEW_USER) bash
+	cat inside_user | sudo --login -u $(NEW_USER) bash
 
 
 setup-python:

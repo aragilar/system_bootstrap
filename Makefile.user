@@ -32,4 +32,5 @@ update:
 	cd $(REPO) && git fetch --all && git merge --ff-only
 
 install-python-tools:
-	pip install -U --user $(PYTOOLS)
+	curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python3
+	pipsi install -U --user $(PYTOOLS)
