@@ -1,8 +1,8 @@
-
+SHELL := /bin/bash # needed for virtualenv stuff
 DUMP_SSH_KEY=cat ~/.ssh/id_rsa.pub
 REPO=~/system_bootstrap
 MAKE_SSH_KEY=ssh-keygen
-WITH_VENV_WRAP=. /usr/share/virtualenvwrapper/virtualenvwrapper.sh
+WITH_VENV_WRAP=source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 PYTOOLS=tox
 
 .PHONY: setup-git setup-ssh-key setup-disc-solver setup-ppd-solutions initial-setup setup update install-python-tools
@@ -26,7 +26,7 @@ setup-ppd-solutions: setup-git
 initial-setup:
 	echo 'No initial setup - run setup once ssh is set up'
 
-setup: setup-disc-solver setup-ppd-solutions
+setup: setup-disc-solver setup-ppd-solutions install-python-tools
 
 update:
 	cd $(REPO)

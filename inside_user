@@ -16,3 +16,7 @@ fi
 
 # do actual install/setup
 make -C "$REPO" -f "$USER_MAKEFILE" initial-setup
+
+if [ ! -e Makefile ]; then
+    ln -s "$REPO"/"$USER_MAKEFILE" Makefile
+fi
