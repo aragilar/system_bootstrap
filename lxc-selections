@@ -597,6 +597,7 @@ sed						install
 sensible-utils					install
 shared-mime-info				install
 startpar					install
+sudo						install
 systemd						install
 systemd-sysv					install
 sysv-rc						install
