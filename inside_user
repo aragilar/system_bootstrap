@@ -1,0 +1,13 @@
+#!/bin/sh
+set -xe
+
+URL=https://github.com/aragilar/system_bootstrap
+REPO=~/system_bootstrap
+USER_MAKEFILE=Makefile.lxc
+
+if [ ! -e "$REPO" ]; then
+    git clone "$URL" "$REPO"
+fi
+
+# do actual install/setup
+make -C "$REPO" -f "$USER_MAKEFILE" initial-setup

@@ -31,7 +31,7 @@ lxc-system-prep:
 	echo "$(USER) veth lxcbr0 2" | sudo tee -a /etc/lxc/lxc-usernet
 
 setup-lxc:
-	lxc-create -t download -n $(LXC_NAME) -- $(LXC_OS) $(LXC_KEYSERVER)
+	-lxc-create -t download -n $(LXC_NAME) -- $(LXC_OS) $(LXC_KEYSERVER)
 	lxc-start -n $(LXC_NAME)
 	lxc-wait -n $(LXC_NAME) -s RUNNING
 	cat inside_lxc | lxc-attach -n $(LXC_NAME) --set-var "APT_PROXY=$(APT_PROXY)" -- bash --login

@@ -2,9 +2,9 @@
 DUMP_SSH_KEY=cat ~/.ssh/id_rsa.pub
 MAKE_SSH_KEY=ssh-keygen
 
-.PHONY: setup-git setup-ssh-key setup-disc-solver setup-ppd-solutions
+.PHONY: setup-git setup-ssh-key setup-disc-solver setup-ppd-solutions initial-setup setup
 
-setup-git:
+setup-git: setup-ssh-key
 	git config --global user.name 'James Tocknell'
 	git config --global user.email 'james.tocknell@students.mq.edu.au'
 
@@ -19,3 +19,7 @@ setup-ppd-solutions: setup-git
 	git clone ssh://git@ssh.github.com:443/aragilar/PPDSolutions ~/PPDSolutions
 	cd ~/PPDSolutions && git annex sync
 	echo 'Use git annex enableremote cloudstor to get cloudstor'
+
+initial-setup: setup-ssh-key
+
+setup: setup-disc-solver setup-ppd-solutions
