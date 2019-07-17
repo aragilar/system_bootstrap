@@ -6,6 +6,9 @@ DEBCONF_FILE=lxc-debconf
 DEBS_RECONF_FILE=lxc-reconf-debs
 USER_MAKEFILE=Makefile.user
 APT_GET=DEBIAN_FRONTEND=noninteractive apt-get -y
+PY36DIR=/usr/lib/python3.6/
+PY37DIR=/usr/lib/python3.7/
+PY38DIR=/usr/lib/python3.8/
 
 
 .PHONY: setup setup-user install-debs set-config
@@ -27,3 +30,9 @@ setup-user: install-debs
 	id $(NEW_USER) || adduser --disabled-password $(NEW_USER)
 	#su --login $(NEW_USER) make -f $(CURRENT_DIR)/$(USER_MAKEFILE)
 	cat inside_user | sudo -u $(NEW_USER) bash
+
+
+setup-python:
+	install --backup=none -D _manylinux.py $(PY36DIR)
+	install --backup=none -D _manylinux.py $(PY37DIR)
+	install --backup=none -D _manylinux.py $(PY38DIR)
