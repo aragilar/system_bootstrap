@@ -4,6 +4,7 @@ REPO=~/system_bootstrap
 MAKE_SSH_KEY=ssh-keygen
 WITH_VENV_WRAP=source /usr/share/virtualenvwrapper/virtualenvwrapper.sh
 PYTOOLS=tox
+PIPSI=~/.local/bin/pipsi
 
 .PHONY: setup-git setup-ssh-key setup-disc-solver setup-ppd-solutions initial-setup setup update install-python-tools
 
@@ -33,4 +34,4 @@ update:
 
 install-python-tools:
 	curl https://raw.githubusercontent.com/mitsuhiko/pipsi/master/get-pipsi.py | python3
-	pipsi install -U --user $(PYTOOLS)
+	$(PIPSI) install $(PYTOOLS) || $(PIPSI) upgrade $(PYTOOLS)
